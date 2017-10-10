@@ -1,0 +1,22 @@
+   ($session, $error) = Net::SNMP->session(
+                           [-hostname      => $hostname,]
+                           [-port          => $port,]
+                           [-localaddr     => $localaddr,]
+                           [-localport     => $localport,]
+                           [-nonblocking   => $boolean,]
+                           [-version       => $version,]
+                           [-domain        => $domain,]
+                           [-timeout       => $seconds,]
+                           [-retries       => $count,]
+                           [-maxmsgsize    => $octets,]
+                           [-translate     => $translate,]
+                           [-debug         => $bitmask,]
+                           [-community     => $community,]   # v1/v2c
+                           [-username      => $username,]    # v3
+                           [-authkey       => $authkey,]     # v3
+                           [-authpassword  => $authpasswd,]  # v3
+                           [-authprotocol  => $authproto,]   # v3
+                           [-privkey       => $privkey,]     # v3
+                           [-privpassword  => $privpasswd,]  # v3
+                           [-privprotocol  => $privproto,]   # v3
+                        );
