@@ -1,0 +1,39 @@
+use SNMP '5.0.2.pre1' || die("Cannot load module\n");
+
+$ENV{'MIBS'}="ALL";  #Load all available MIBs
+$SNMP_TARGET = "10.10.1.224";
+$SNMP_COMMUNITY = "public";
+
+$SESSION = new SNMP::Session (DestHost => $SNMP_TARGET, 
+                                Community => $SNMP_COMMUNITY,
+                                Version => 1);
+
+# Populate a VarList with OID values.
+$APC_VLIST =  new SNMP::VarList(['upsBasicIdentModel'],         #0      
+                                ['upsAdvIdentSerialNumber'],    #1
+                                ['upsAdvBatteryCapacity'],      #2
+                                ['upsAdvBatteryTemperature'],   #3
+                                ['upsAdvOutputLoad'],           #4
+                                ['upsAdvOutputVoltage'],        #5
+                                ['upsAdvOutputFrequency'],      #6
+                                ['upsBasicOutputStatus']);      #7
+
+# Pass the VarList to getnext building an array of the output
+@APC_INFO = $SESSION->getnext($APC_VLIST);
+
+$APC_INFO[0] =~ s/\"//g;        # Ditch the quotes.
+$APC_INFO[1] =~ s/\"//g;
+
+# Output the results.
+print <<END;
+APC UPS                         ${SNMP_TARGET}
+Model: ${APC_INFO[0]}       Serial No: ${APC_INFO[1]}
+
+Battery Capacity: ${APC_INFO[2]}        
+Battery Temp(F): ${APC_INFO[3]}
+
+Output Status: ${APC_INFO[7]}
+Output Load: ${APC_INFO[4]}
+
+Output: ${APC_INFO[5]}VAC @ ${APC_INFO[6]}Hz  
+END
